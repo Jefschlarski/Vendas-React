@@ -2,17 +2,16 @@ import { useState } from "react";
 import { NotificationTypeEnum, useGlobalContext } from './useGlobalContext';
 import Connection, { post } from "../functions/connections/connections";
 import { AUTH_URL } from "../constants/urls";
-import { useNavigate } from "react-router-dom";
 import { ProductRoutesEnum } from "../../modules/product/routes";
 import { ERROR_AUTH, ERROR_NOT_FOUND } from "../constants/errors";
 import { setAuthToken } from "../functions/connections/auth";
 import { Auth } from "../../modules/login/types/Auth";
 import { Methods } from "../enums/methods";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 export const useRequest = () => {
    const [loading, setLoading] = useState(false);
    const { setNotification, setUser } = useGlobalContext();
-   const navigate = useNavigate();
 
    const request = async <T>(url: string, method: Methods, saveGlobal?:(object: T) => void, body?: any): Promise<T | undefined> => {
     setLoading(true);
@@ -29,13 +28,14 @@ export const useRequest = () => {
     return returnObject
    }
 
-   const authRequest = async (body: any): Promise<void> => {
+   const authRequest = async (navigate: NavigateFunction, body: any): Promise<void> => {
     setLoading(true);
      await post<Auth>(AUTH_URL, body).then((result) => {
         setUser(result.user);
         setAuthToken(result.accessToken);
-        setLoading(false);
         navigate(ProductRoutesEnum.PRODUCTS);
+        setLoading(false);
+
     }).catch((e : Error) => {
         if (e.message === ERROR_NOT_FOUND) {
             setNotification(ERROR_AUTH, NotificationTypeEnum.ERROR);

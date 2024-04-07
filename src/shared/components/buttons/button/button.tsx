@@ -9,9 +9,9 @@ interface Props extends ButtonProps {
  * Generate a antd button component with specified margin, title, and additional props.
  *
  * @param {object} props - Object containing margin, title, and any additional props.
- * @return {TSX.Element} The button component.
+ * @return {React.ReactNode} The button component.
  */
-const Button = ({margin, title, ...props}: Props) => {
-    return <AntdButton style={{ margin }} type="primary" {...props}>{title}</AntdButton>
+const Button = ({margin, title, ...props}: Props): React.ReactNode => {
+    return <AntdButton style={{ margin }} {...props}>{title}</AntdButton>
 }
 export default Button

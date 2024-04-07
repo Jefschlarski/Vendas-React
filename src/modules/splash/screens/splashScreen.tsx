@@ -12,7 +12,7 @@ const SplashScreen = () => {
         if (user){
             Navigate(ProductRoutesEnum.PRODUCTS);
         } 
-    },[])
+    },[user]);
     return (
         <Spin size="large"/>
     )

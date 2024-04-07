@@ -18,16 +18,11 @@ export const getAuthToken = () => {
     return getItemFromStorage(AUTHORIZATION_KEY);
 }
 
-export const isAuthenticated = async (setUser: (user: User) => void, user?: User) => {
+export const isAuthenticated = async () => {
   const token = getAuthToken();
     if (!token) {
       location.href = '/login';
-    }
-    if (!user) {
       await get<User>(USER_URL)
-        .then((userReturn) => {
-          setUser(userReturn);
-        })
         .catch(() => {
           unsetAuthToken();
           location.href = '/login';
