@@ -1,16 +1,23 @@
 import { createContext, useContext, useState } from 'react';
+import { User } from '../../modules/login/types/User';
 
-type NotificationType = 'success' | 'info' | 'warning' | 'error';
+export enum NotificationTypeEnum {
+  SUCCESS = 'success',
+  ERROR = 'error',
+  WARNING = 'warning',
+  INFO = 'info',
+}
+export type NotificationType = keyof typeof NotificationTypeEnum;
 
 interface NotificationProps {
   message: string;
-  type: NotificationType;
+  type: NotificationTypeEnum;
   description?: string;
 }
 
 interface GlobalData {
-  accessToken?: string;
   notification?: NotificationProps;
+  user?: User;
 }
 
 interface GlobalContextProps {
@@ -30,15 +37,10 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   );
 };
 export const useGlobalContext = () => {
+  
   const { globalData, setGlobalData } = useContext(GlobalContext);
-  const setAccessToken = (accessToken: string) => {
-    setGlobalData({
-      ...globalData,
-      accessToken,
-    });
-  };
 
-  const setNotification = (message: string, type: NotificationType, description?: string) => {
+  const setNotification = (message: string, type: NotificationTypeEnum, description?: string) => {
     setGlobalData({
       ...globalData,
       notification: {
@@ -49,10 +51,17 @@ export const useGlobalContext = () => {
     });
   };
 
+  const setUser = (user: User) => {
+    setGlobalData({
+      ...globalData,
+      user,
+    });
+  };
+
   return {
     notification: globalData?.notification,
-    accessToken: globalData?.accessToken,
-    setAccessToken,
+    user: globalData?.user,
+    setUser,
     setNotification,
   };
 };

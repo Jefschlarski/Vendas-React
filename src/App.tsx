@@ -2,21 +2,20 @@ import type { Router as RemixRouter } from '@remix-run/router';
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom';
 
 import { loginRoutes } from './modules/login/routes';
-import ErrorPage from './errorPage';
 import { useNotification } from './shared/hooks/useNotification';
-
-const mainRoutes: RouteObject[] = [
-  {
-    path: '/',
-    element: <div>Tela Principal</div>,
-    errorElement: <ErrorPage/>,
-  },
-];
-
-const router: RemixRouter = createBrowserRouter([...mainRoutes, ...loginRoutes]);
+import { splashRoutes } from './modules/splash/routes';
+import { ProductRoutes } from './modules/product/routes';
+import { useGlobalContext } from './shared/hooks/useGlobalContext';
+import { isAuthenticated } from './shared/functions/connections/auth';
 
 function App() {
   const { contextHolder } = useNotification();
+  const { user, setUser } = useGlobalContext();
+
+  const publicRoutes: RouteObject[] = [...loginRoutes];
+  const privateRoutes: RouteObject[] = [...splashRoutes, ...ProductRoutes].map((route) => ({...route, loader: () => isAuthenticated(setUser, user)}));
+  const router: RemixRouter = createBrowserRouter([...publicRoutes, ...privateRoutes]);
+
   return (
     <>
     {contextHolder}
