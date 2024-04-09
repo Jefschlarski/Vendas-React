@@ -6,4 +6,10 @@ export const ProductHeaderContainer = styled.div`
     padding: 16px;
     justify-content: space-between;
     align-items: center;
+
+    div {
+        width: 20vw;
+        display: flex;
+        gap: 16px;
+    }
 `

@@ -1,29 +1,22 @@
-import { Breadcrumb as BcAntd} from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Breadcrumb as AntdBreadcrumb } from 'antd';
 
 export interface BreadcrumbItem {
-    name: string
-    url?: string
+  title: string
+  href?: string
 }
 interface BreadcrumbProps {
     breadcrumbItems: BreadcrumbItem[]
 }
 
 const Breadcrumb = ({ breadcrumbItems }: BreadcrumbProps) => {
-    const navigate = useNavigate();
-
-    const handleClick = (url: string) => {
-        navigate(url);
-    }
-
   return (
-  <BcAntd>
-    {breadcrumbItems.map((breadcrumb) => (
-      <BcAntd.Item key={breadcrumb.url}>
-       {breadcrumb.url ? <a onClick={() => handleClick(breadcrumb.url!)}>{breadcrumb.name}</a>: <b>{breadcrumb.name}</b>}
-      </BcAntd.Item>
-    ))}
-  </BcAntd>)
+  <AntdBreadcrumb
+    items={breadcrumbItems.map((item) => ({
+        key: item.title, 
+        title: item.title,
+        href: item.href,
+    }))}
+  />)
 };
 
 export default Breadcrumb;
